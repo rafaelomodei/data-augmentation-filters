@@ -2,21 +2,16 @@ import os
 import argparse
 from image_filter import BrightnessFilter, ContrastFilter, BlurFilter, SaturationFilter
 from image_processor import ImageProcessor
+from helper import parse_filters
 
 def main():
-    parser = argparse.ArgumentParser(description="Process images with a filter.")
+    parser = argparse.ArgumentParser(description="Process images with multiple filters.")
     parser.add_argument('--dir', required=True, help="Source directory of images")
-    parser.add_argument('--filter', choices=['brightness', 'contrast', 'blur', 'saturation'], required=True, help="Type of filter to apply")
-    parser.add_argument('--value', type=float, default=1.5, help="Value of the filter to apply")
+    parser.add_argument('--filters', required=True, help="Filters to apply with values, e.g., 'blur=5.0, brightness=2.4'")
     args = parser.parse_args()
 
     source_directory = args.dir
-    filter_type = args.filter
-    filter_value = args.value
-
-    base_name = os.path.basename(source_directory.rstrip('/'))
-    parent_directory = os.path.dirname(source_directory.rstrip('/'))
-    destination_directory = os.path.join(parent_directory, f"{base_name}_{filter_type}_{filter_value}")
+    filter_params = parse_filters(args.filters)
 
     filter_classes = {
         'brightness': BrightnessFilter,
@@ -25,10 +20,18 @@ def main():
         'saturation': SaturationFilter
     }
 
-    image_filter = filter_classes[filter_type](filter_value)
+    for filter_type, filter_value in filter_params.items():
+        if filter_type in filter_classes:
+            image_filter = filter_classes[filter_type](filter_value)
 
-    processor = ImageProcessor(image_filter, filter_type, filter_value)
-    processor.process_directory(source_directory, destination_directory)
+            base_name = os.path.basename(source_directory.rstrip('/'))
+            parent_directory = os.path.dirname(source_directory.rstrip('/'))
+            destination_directory = os.path.join(parent_directory, f"{base_name}_{filter_type}_{filter_value}")
+
+            processor = ImageProcessor(image_filter, filter_type, filter_value)
+            processor.process_directory(source_directory, destination_directory)
+        else:
+            print(f"Filter '{filter_type}' is not recognized.")
 
 if __name__ == "__main__":
     main()
