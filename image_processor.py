@@ -12,6 +12,8 @@ class ImageProcessor:
         if not os.path.exists(destination_directory):
             os.makedirs(destination_directory)
 
+        print(f"Processing filter: {self.filter_name} with value: {self.filter_value}")
+
         files = os.listdir(source_directory)
         total_files = len(files)
 
