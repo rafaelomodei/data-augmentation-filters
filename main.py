@@ -27,7 +27,7 @@ def main():
 
     image_filter = filter_classes[filter_type](filter_value)
 
-    processor = ImageProcessor(image_filter)
+    processor = ImageProcessor(image_filter, filter_type, filter_value)
     processor.process_directory(source_directory, destination_directory)
 
 if __name__ == "__main__":
