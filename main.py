@@ -7,7 +7,7 @@ from helper import parse_filters
 def main():
     parser = argparse.ArgumentParser(description="Process images with multiple filters.")
     parser.add_argument('--dir', required=True, help="Source directory of images")
-    parser.add_argument('--filters', required=True, help="Filters to apply with values, e.g., 'blur=5.0,brightness=2.4'")
+    parser.add_argument('--filters', required=True, help="Filters to apply with values, e.g., 'blur=0.6,brightness=2.4'")
     args = parser.parse_args()
 
     source_directory = args.dir
